@@ -3,13 +3,11 @@
 /**
  * _printf - implementation of the inbuilt printf
  * @format: the format specifier
- * Return: the formated string
+ * Return: the formatted string
  */
-
 int _printf(const char *format, ...)
 {
 	int printed = 0;
-
 	va_list args;
 
 	va_start(args, format);
