@@ -6,6 +6,7 @@
  * @printed: The number of characters printed so far
  * Return: The updated number of printed characters
  */
+
 int print_integer(va_list args, int printed)
 {
     int num = va_arg(args, int);
