@@ -1,48 +1,34 @@
 #include "main.h"
 
 /**
- * _printf - produces output according to a format
- * @format: character string
- * @...: other arguments
- * Return: number of characters printed
+ * _printf - implementation of the inbuilt printf
+ * @format: the format specifier
+ * Return: the formated string
  */
 
 int _printf(const char *format, ...)
 {
-	choose c[] = {
-		{"%c", prt_char}, {"%s", prt_str}, {"%%", prt_pers}, {"%i", prt_int}
-	};
+	int printed = 0;
 
-	va_list param;
-	int len = 0;
-	int i = 0;
-	int j = 0;
+	va_list args;
 
-	va_start(param, format);
+	va_start(args, format);
 
-	if (!format || (format[0] == '%' && format[1] == '\0'))
-		return (-1);
-
-Etqt:
-	while (format[i] != '\0')
+	while (*format != '\0')
 	{
-		j = 0;
-		while (j < 4)
+		if (*format == '%')
 		{
-			if (c[j].cle[0] == format[i] && c[j].cle[1] == format[i + 1])
-			{
-				len = len + c[j].f(param);
-				i = i + 2;
-				goto Etqt;
-			}
-			j--;
+			format++;
+			printed = selector(format, args, printed);
+			format++;
 		}
-		_putchar(format[i]);
-		len++;
-		i++;
+		else
+		{
+			_putchar(*format);
+			printed++;
+			format++;
+		}
 	}
-
-
-	va_end(param);
-	return (len);
+	va_end(args);
+	return (printed);
 }
