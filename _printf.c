@@ -1,67 +1,45 @@
 #include "main.h"
-#include <stdarg.h>
-#include <unistd.h>
-
 /**
- * _printf - produces output according to a format
- * @format: format string containing the characters and specifiers
- * Return: number of characters printed (excluding the null byte)
+ * _printf - is a function that selects the correct function to print.
+ * @format: identifier to look for.
+ * Return: the length of the string.
  */
-int _printf(const char *format, ...)
+int _printf(const char * const format, ...)
 {
-    va_list args;
-    int count = 0;
+	convert_match m[] = {
+		{"%s", printf_string}, {"%c", printf_char},
+		{"%%", printf_37},
+		{"%i", printf_int}, {"%d", printf_dec}, {"%r", printf_srev},
+		{"%R", printf_rot13}, {"%b", printf_bin}, {"%u", printf_unsigned},
+		{"%o", printf_oct}, {"%x", printf_hex}, {"%X", printf_HEX},
+		{"%S", printf_exclusive_string}, {"%p", printf_pointer}
+	};
 
-    va_start(args, format);
+	va_list args;
+	int i = 0, j, len = 0;
 
-    while (*format)
-    {
-        if (*format == '%')
-        {
-            format++; // Move past the '%'
-            if (*format == '\0')
-                break;
+	va_start(args, format);
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
 
-            if (*format == 'c')
-            {
-                char c = va_arg(args, int);
-                write(1, &c, 1);
-                count++;
-            }
-            else if (*format == 's')
-            {
-                char *str = va_arg(args, char *);
-                if (str == NULL)
-                    str = "(null)";
-                while (*str)
-                {
-                    write(1, str, 1);
-                    str++;
-                    count++;
-                }
-            }
-            else if (*format == '%')
-            {
-                write(1, "%", 1);
-                count++;
-            }
-            else
-            {
-                // Unknown specifier, print the character as is
-                write(1, "%", 1);
-                write(1, format, 1);
-                count += 2;
-            }
-        }
-        else
-        {
-            write(1, format, 1);
-            count++;
-        }
-
-        format++;
-    }
-
-    va_end(args);
-    return count;
+Here:
+	while (format[i] != '\0')
+	{
+		j = 13;
+		while (j >= 0)
+		{
+			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
+			{
+				len += m[j].f(args);
+				i = i + 2;
+				goto Here;
+			}
+			j--;
+		}
+		_putchar(format[i]);
+		len++;
+		i++;
+	}
+	va_end(args);
+	return (len);
 }

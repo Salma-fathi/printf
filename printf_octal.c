@@ -1,37 +1,35 @@
 #include "main.h"
 
 /**
- * printf_octal - prints a binary number
- * @num: number of arguements
- * @printed: the printed characters
- * Return: printed charcaters
+ * printf_oct - prints an octal number.
+ * @val: arguments.
+ * Return: counter.
  */
-
-int printf_octal(unsigned int num, int printed)
+int printf_oct(va_list val)
 {
-	int oct[100], i = 0, j;
+	int i;
+	int *array;
+	int counter = 0;
+	unsigned int num = va_arg(val, unsigned int);
+	unsigned int temp = num;
 
-	while (num != 0)
+	while (num / 8 != 0)
 	{
-		int remainder = num % 8;
-
-		oct[i] = 48 + remainder;
-		i++;
 		num /= 8;
+		counter++;
 	}
+	counter++;
+	array = malloc(counter * sizeof(int));
 
-	if (i == 0)
+	for (i = 0; i < counter; i++)
 	{
-		_putchar('0');
-		printed++;
+		array[i] = temp % 8;
+		temp /= 8;
 	}
-	else
+	for (i = counter - 1; i >= 0; i--)
 	{
-		for (j = i - 1; j >= 0; j--)
-		{
-			_putchar(oct[j]);
-			printed++;
-		}
+		_putchar(array[i] + '0');
 	}
-	return (printed);
+	free(array);
+	return (counter);
 }

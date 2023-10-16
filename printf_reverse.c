@@ -1,27 +1,23 @@
 #include "main.h"
 
 /**
- * printf_reverse - prints a binary number
- * @args: number of arguements
- * @printed: the printed characters
- * Return: printed charcaters
+ * printf_srev - function that prints a str in reverse
+ * @args: type struct va_arg where is allocated printf arguments
+ *
+ * Return: the string
  */
-
-int printf_reverse(va_list args, int printed)
+int printf_srev(va_list args)
 {
-	char *str = va_arg(args, char *);
-	int len = 0, i;
 
-	while (str[len])
-	{
-		len++;
-	}
+	char *s = va_arg(args, char*);
+	int i;
+	int j = 0;
 
-	for (i = len - 1; i >= 0; i--)
-	{
-		_putchar(str[i]);
-		printed++;
-	}
-
-	return (printed);
+	if (s == NULL)
+		s = "(null)";
+	while (s[j] != '\0')
+		j++;
+	for (i = j - 1; i >= 0; i--)
+		_putchar(s[i]);
+	return (j);
 }
