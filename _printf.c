@@ -1,74 +1,51 @@
-#include <stdarg.h>
-#include <unistd.h>
-#include <stdio.h>
-int _strlen(char *str);
+#include "main.h"
 
 /**
- * _printf - produces output according to a format
- * @format: character string
+ * _printf - formatted output conversion and print data.
+ * @format: input string.
  *
- * Return: number of characters printed excluding the null byte 
+ * Return: number of chars printed.
  */
-
 int _printf(const char *format, ...)
 {
-	va_list args;
-	/*char *str,*/
-      	char ch, *st;
-	int len;
+	unsigned int i = 0, len = 0, ibuff = 0;
+	va_list arguments;
+	int (*function)(va_list, char *, unsigned int);
+	char *buffer;
 
-	va_start(args, format);
-	/*str = va_arg(args, char *);*/
-	len = 0;
-        while (*format)
+	va_start(arguments, format), buffer = malloc(sizeof(char) * 1024);
+	if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
+		return (-1);
+	if (!format[i])
+		return (0);
+	for (i = 0; format && format[i]; i++)
 	{
-		if (*format == '%')
+		if (format[i] == '%')
 		{
-			format++;
-			switch (*format)
-			{
-				case 'c':
-					ch = va_arg(args, int);
-					write (1, &ch, 1);
-					len++;
-					printf("length check c:%d\n", len);
-				       	break;
-				case 's':
-					st = va_arg(args, char *);
-					write (1, st, _strlen(st));
-					len = len + _strlen(st);
-					printf("length check s:%d\n", len);
-					break;
-				default:
-					break;
+			if (format[i + 1] == '\0')
+			{	print_buff(buffer, ibuff), free(buffer), va_end(arguments);
+				return (-1);
 			}
+			else
+			{	function = fetch_print_func(format, i + 1);
+				if (function == NULL)
+				{
+					if (format[i + 1] == ' ' && !format[i + 2])
+						return (-1);
+					com_buff(buffer, format[i], ibuff), len++, i--;
+				}
+				else
+				{
+					len += function(arguments, buffer, ibuff);
+					i += id_print_func(format, i + 1);
+				}
+			} i++;
 		}
 		else
-		{
-			write (1, format, 1);
-			len++;
-			printf("length check else:%d\n", len);
-		}		
-		format++;
+			com_buff(buffer, format[i], ibuff), len++;
+		for (ibuff = len; ibuff > 1024; ibuff -= 1024)
+			;
 	}
-	va_end(args);
+	print_buff(buffer, ibuff), free(buffer), va_end(arguments);
 	return (len);
-}
-
-/**
- * _strlen - finds string length
- * @str: pointer to string
- *
- * Return: string length.
- */
-
-int _strlen(char *str)
-{
-	int length = 0;
-	while (*str != '\0')
-	{
-		str++;
-		length++;
-	}
-	return (length);
 }
