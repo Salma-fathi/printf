@@ -1,52 +1,81 @@
-#include "main.h"
+/**
+ * print_int_helper - ...
+ * @n: ...
+ * Return: len of number
+ */
+int print_int_helper(int n)
+{
+	int digit, ncpy, remainder, i = 0, len = 0, reverse = 0;
+
+	ncpy = n;
+
+	while (ncpy > 0)
+	{
+		ncpy /= 10;
+		len++;
+	}
+	while (n != 0)
+	{
+		remainder = n % 10;
+		reverse = reverse * 10 + remainder;
+		n /= 10;
+	}
+	while (reverse > 0)
+	{
+		digit = reverse % 10;
+		_putchar (digit + '0');
+		reverse /= 10;
+		i++;
+	}
+	while (i++ < len)
+		_putchar('0');
+
+	return (len);
+}
 
 /**
- * print_integer - Prints an integer number
- * @args: Number argument from va_list
- * @printed: The number of characters printed so far
- * Return: The updated number of printed characters
+ * handle_int_min -print int min given
+ * Return: len of INT_MAX
  */
-
-int print_integer(va_list args, int printed)
+int handle_int_min(void)
 {
-    int num = va_arg(args, int);
-    int digits = 0;
-    int temp = num;
-    int digit;
+	char *my_int_min = "-2147483648";
 
-    if (num < 0)
-    {
-        printed += _putchar('-');
-        temp = -num;
-    }
+		while (*my_int_min)
+		{
+			_putchar(*my_int_min);
+			my_int_min++;
+		}
+		return (11);
+}
+/**
+ * print_int - print intgers
+ * @ap: va_list
+ * Return: length of int
+ */
+int print_int(va_list ap)
+{
+	int n, len = 0, isNeg = 0;
 
-    if (temp == 0)
-    {
-        printed += _putchar('0');
-        return printed;
-    }
-
-    while (temp != 0)
-    {
-        digits++;
-        temp /= 10;
-    }
-
-    while (digits > 0)
-    {
-        int pow10 = 1;
-        int i;
-
-        for (i = 1; i < digits; i++)
-        {
-            pow10 *= 10;
-        }
-
-        digit = num / pow10;
-        printed += _putchar(digit + '0');
-        num -= digit * pow10;
-        digits--;
-    }
-
-    return printed;
+	n = va_arg(ap, int);
+	if (n == INT_MIN)
+	{
+		len += handle_int_min();
+		return (len);
+	}
+	if (n == 0)
+	{
+		_putchar('0');
+		return (1);
+	}
+	if (n < 0)
+	{
+		_putchar('-');
+		n *= -1;
+		isNeg = 1;
+	}
+	len += print_int_helper(n);
+	if (isNeg)
+		len++;
+	return (len);
 }

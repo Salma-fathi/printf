@@ -1,37 +1,36 @@
 #include "main.h"
 
 /**
- * printf_binary - prints a binary number
- * @num: number arguements
- * @printed: the printed characters
- * Return: printed charcaters
+ * print_address - print address of value
+ * @ap:va_list
+ * Return:len
  */
-
-int printf_binary(unsigned int num, int printed)
+int print_address(va_list ap)
 {
-	int binary[32] = {0};
-	int i = 0;
+	void *ptr;
+	char *str = "(nil)";
+	int len;
+	int i;
+	va_list dest;
 
-	if (num == 0)
+	va_copy(dest, ap);
+	ptr = va_arg(ap, void*);
+	if (ptr == NULL)
 	{
-		_putchar('0');
-		printed++;
-		return (printed);
+		i = 0;
+		while (*str)
+		{
+			_putchar(*str);
+			str++;
+			i++;
+		}
+		va_end(dest);
+		return (i);
 	}
+	_putchar('0');
+	_putchar('x');
+	len = print_hex_ptr(dest);
+	va_end(dest);
+	return (len + 2);
 
-	while (num > 0)
-	{
-		binary[i] = num % 2;
-		num /= 2;
-		i++;
-	}
-
-	while (i > 0)
-	{
-		i--;
-		_putchar('0' + binary[i]);
-		printed++;
-	}
-
-	return (printed);
 }

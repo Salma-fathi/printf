@@ -1,23 +1,32 @@
 #include "main.h"
 
 /**
- * printf_srev - function that prints a str in reverse
- * @args: type struct va_arg where is allocated printf arguments
- *
- * Return: the string
+ * reverse_string - reverse str
+ * @ap:va_list
+ * Return:len
  */
-int printf_srev(va_list args)
+int reverse_string(va_list ap)
 {
+	int len, i;
+	char *str;
+	char *ptr;
 
-	char *s = va_arg(args, char*);
-	int i;
-	int j = 0;
-
-	if (s == NULL)
-		s = "(null)";
-	while (s[j] != '\0')
-		j++;
-	for (i = j - 1; i >= 0; i--)
-		_putchar(s[i]);
-	return (j);
+	len = 0;
+	str = va_arg(ap, char *);
+	ptr = str;
+	if (!str)
+	{
+		str = "(null)";
+		for (i = 0; i < 6; i++)
+			_putchar(str[i]);
+		return (0);
+	}
+	while (*str)
+	{
+		len++;
+		str++;
+	}
+	for (i = len - 1; i >= 0; i--)
+		_putchar(ptr[i]);
+	return (len);
 }

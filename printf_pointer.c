@@ -1,50 +1,36 @@
 #include "main.h"
 
-#define MAX_HEX_DIGITS 16
-
 /**
- * printf_pointer - prints a binary number
- * @args: numberof arguements
- * @printed: the printed characters
- * Return: printed charcaters
+ * print_address - print address of value
+ * @ap:va_list
+ * Return:len
  */
-
-int printf_pointer(va_list args, int printed)
+int print_address(va_list ap)
 {
-	void *ptr = va_arg(args, void*);
-	unsigned long num = (unsigned long) ptr;
-	int digits = 0;
+	void *ptr;
+	char *str = "(nil)";
+	int len;
 	int i;
-	unsigned long temp = num;
-	char hex_digits[MAX_HEX_DIGITS] = "0123456789abcdef";
-	char hex[MAX_HEX_DIGITS];
+	va_list dest;
 
-	while (temp != 0)
+	va_copy(dest, ap);
+	ptr = va_arg(ap, void*);
+	if (ptr == NULL)
 	{
-		digits++;
-		temp /= 16;
-	}
-
-	printed += _putchar('0');
-	printed += _putchar('x');
-
-	if (num == 0)
-	{
-		printed += _putchar('0');
-	}
-	else
-	{
-		for (i = digits - 1; i >= 0; i--)
+		i = 0;
+		while (*str)
 		{
-			int digit = num % 16;
-
-			hex[i] = hex_digits[digit];
-			num /= 16;
+			_putchar(*str);
+			str++;
+			i++;
 		}
-		for (i = 0; i < digits; i++)
-		{
-			printed += _putchar(hex[i]);
-		}
+		va_end(dest);
+		return (i);
 	}
-	return (printed);
+	_putchar('0');
+	_putchar('x');
+	len = print_hex_ptr(dest);
+	va_end(dest);
+	return (len + 2);
+
 }

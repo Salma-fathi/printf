@@ -1,15 +1,12 @@
 #include "main.h"
 
 /**
- * printf_char - prints a char.
- * @val: arguments.
- * Return: 1.
+ * print_char - print input as char
+ * @ap:pointer
+ * Return:len of char
  */
-int printf_char(va_list val)
+int print_char(va_list ap)
 {
-	char s;
-
-	s = va_arg(val, int);
-	_putchar(s);
+	_putchar(va_arg(ap, int));
 	return (1);
 }
