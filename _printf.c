@@ -1,33 +1,48 @@
 #include "main.h"
 
 /**
- * _printf - Custom printf implementation with variable arguments.
- * @format: A format string that specifies how to format the output.
- * @...: Variable number of arguments based on the format string.
- *
- * Return: The number of characters printed.
+ * _printf - produces output according to a format
+ * @format: character string
+ * @...: other arguments
+ * Return: number of characters printed
  */
 
 int _printf(const char *format, ...)
 {
-	int printed_chars;
-
-	fmt_list func_list[] =	{
-		{"c", print_char},
-		{"s", print_string},
-		{"%", print_percent},
-		{NULL, NULL}
+	choose c[] = {
+		{"%c", prt_char}, {"%s", prt_str}, {"%%", prt_pers}, {"%i", prt_int}
 	};
 
-	va_list args;
+	va_list param;
+	int len = 0;
+	int i = 0;
+	int j = 0;
 
-	if (format == NULL)
+	va_start(param, format);
+
+	if (!format || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
 
-	va_start(args, format);
+Etqt:
+	while (format[i] != '\0')
+	{
+		j = 0;
+		while (j < 4)
+		{
+			if (c[j].cle[0] == format[i] && c[j].cle[1] == format[i + 1])
+			{
+				len = len + c[j].f(param);
+				i = i + 2;
+				goto Etqt;
+			}
+			j--;
+		}
+		_putchar(format[i]);
+		len++;
+		i++;
+	}
 
-	printed_chars = handle_specifiers(format, func_list, args);
-	va_end(args);
 
-	return (printed_chars);
+	va_end(param);
+	return (len);
 }
